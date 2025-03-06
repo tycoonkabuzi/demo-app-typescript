@@ -1,13 +1,23 @@
-import axios from "axios";
 import { JSX, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router";
+
+type PostData = {
+  id: number;
+  title: string;
+  content: string;
+  thumbnail?: string;
+};
+
 const Main = styled.div``;
-const Heading = styled.h1``;
+
 const WrapperPosts = styled.div`
   display: flex;
   align-items: center;
   gap: 10%;
+  border: 1px #ededed solid;
+  padding: 20px;
+  margin: 10px;
+  background-color: #f6f6f6;
 `;
 const WrapperImage = styled.div``;
 const WrapperText = styled.div`
@@ -16,32 +26,16 @@ const WrapperText = styled.div`
 const Title = styled.h2``;
 const Body = styled.p``;
 const Thumbnail = styled.img``;
-const PostList = () => {
-  type PostData = {
-    id: number;
-    title: string;
-    content: string;
-    thumbnail: string;
-  };
-  const [data, setData] = useState<PostData[] | null>();
-  useEffect(() => {
-    axios
-      .get("https://jsonplaceholder.org/posts")
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error("Unable to fetch data", error);
-      });
-  }, []);
+
+const PostList = ({ currentData }) => {
   const reduceContentSize = (content: string): string => {
     return content.slice(0, 400);
   };
+
   return (
     <Main>
-      <Heading>Post List</Heading>
-      {data ? (
-        data.map(
+      {currentData ? (
+        currentData.map(
           (post: PostData): JSX.Element => (
             <WrapperPosts key={post.id}>
               <WrapperImage>
